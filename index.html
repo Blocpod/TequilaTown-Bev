@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Tequila Town | Real Tequila. Wild Fruit. Nothing Ordinary.</title>
+  <meta name="description" content="Meet Tequila Town, a sparkling tequila cocktail made with real tequila, mineral water, and four wild fruit and botanical flavor combinations." />
+  <meta property="og:title" content="Tequila, turned loose." />
+  <meta property="og:description" content="Four sparkling tequila cocktails. Real tequila, real fruit, and absolutely nothing ordinary." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/img/can-xoconostle-front.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="theme-color" content="#15130f" />
+  <link rel="icon" href="/img/logo-circle.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Archivo:wdth,wght@62..125,300..700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/styles.css" />
+</head>
+<body data-flavor="xoconostle">
+
+<!-- AGE GATE -->
+<div id="gate" class="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
+  <div class="gate__grain" aria-hidden="true"></div>
+  <div class="gate__inner">
+    <p class="eyebrow gate__eyebrow"><span class="agave" aria-hidden="true"></span>Tequila Town</p>
+    <h1 id="gate-title" class="gate__title">Welcome to<br /><em>Tequila Town.</em></h1>
+    <p class="gate__q">Are you 21 or older?</p>
+    <div class="gate__actions">
+      <button class="btn btn--bone" id="gate-enter" type="button"><span class="btn__label">Enter</span><span class="btn__loading" aria-hidden="true">Pouring</span></button>
+      <button class="btn btn--ghost btn--ghost-bone" id="gate-no" type="button">Not yet</button>
+    </div>
+    <p class="gate__note">Please enjoy responsibly.</p>
+    <p class="gate__denied" id="gate-denied" hidden>Come back when you are 21. The cooler will still be cold.</p>
+  </div>
+  <div class="gate__band" aria-hidden="true"></div>
+</div>
+
+<!-- PERSISTENT 3D CAN -->
+<canvas id="gl" aria-hidden="true"></canvas>
+
+<!-- NAV -->
+<header class="nav" id="nav">
+  <a class="nav__brand" href="#top" data-scroll>Tequila <span>Town</span></a>
+  <nav class="nav__links" aria-label="Primary">
+    <a href="#flavors" data-scroll>Flavors</a>
+    <a href="#inside" data-scroll>Inside</a>
+    <a href="#story" data-scroll>Story</a>
+    <a href="#find" data-scroll>Find Us</a>
+  </nav>
+  <div class="nav__right">
+    <a class="nav__shop" href="#shop" data-scroll>Shop <span class="arrow" aria-hidden="true">&rarr;</span></a>
+    <button class="nav__cart" id="cart-open" type="button" aria-label="Open cooler" aria-controls="cart" aria-expanded="false">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 9h16l-1 11H5L4 9Z"/><path d="M8 9V7a4 4 0 0 1 8 0v2"/></svg>
+      <span class="nav__count" id="cart-count" hidden>0</span>
+    </button>
+  </div>
+  <button class="nav__burger" id="nav-burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu"><span></span><span></span></button>
+</header>
+<div class="mobile-menu" id="mobile-menu" hidden>
+  <a href="#flavors" data-scroll>Flavors</a>
+  <a href="#inside" data-scroll>Inside</a>
+  <a href="#story" data-scroll>Story</a>
+  <a href="#find" data-scroll>Find Us</a>
+  <a href="#shop" data-scroll>Shop <span aria-hidden="true">&rarr;</span></a>
+  <p class="mobile-menu__foot">Real tequila. Wild fruit. Mineral water.</p>
+</div>
+
+<main id="main">
+
+  <!-- 01 / THE POUR -->
+  <section class="hero" id="top" data-theme="ink">
+    <div class="hero__wash" aria-hidden="true"></div>
+    <p class="hero__wordmark" aria-hidden="true"><span>Tequila</span><span>Town</span></p>
+    <img class="can-fallback hero__fallback" src="/img/cut-xoconostle-front.png" alt="" width="417" height="1137" />
+
+    <div class="hero__top">
+      <p class="eyebrow">01 / The Pour</p>
+      <p class="hero__tag"><em>Tequila, turned loose.</em></p>
+    </div>
+
+    <div class="hero__bottom">
+      <div class="hero__copy">
+        <h1 class="hero__title" id="hero-title">
+          <span class="line"><span>Real tequila.</span></span>
+          <span class="line"><span>Wild fruit.</span></span>
+          <span class="line"><span>Nothing <em>ordinary.</em></span></span>
+        </h1>
+        <p class="hero__sub">A sparkling tequila cocktail made with real tequila, real fruit, mineral water, and flavors most cans are too scared to touch.</p>
+        <a class="btn btn--bone" href="#flavors" data-scroll>Meet the four</a>
+      </div>
+
+      <div class="hero__scroll" aria-hidden="true"><span>Scroll</span><i></i></div>
+
+      <dl class="hero__stats">
+        <div><dt>Real tequila</dt><dd>No malt base</dd></div>
+        <div><dt>Four flavors</dt><dd>Zero safe choices</dd></div>
+      </dl>
+    </div>
+
+    <div class="hero__flavor" id="hero-flavor" aria-live="polite">
+      <span class="dot" aria-hidden="true"></span>
+      <span class="hero__flavor-name">Xoconostle + Key Lime + Sea Salt</span>
+    </div>
+  </section>
+
+  <!-- 02 / FOUR FLAVORS -->
+  <section class="flavors" id="flavors" data-theme="bone">
+    <div class="flavors__stage" id="flavors-stage">
+      <div class="flavors__wash" aria-hidden="true"></div>
+      <header class="flavors__head">
+        <div><p class="eyebrow">02 / Four Flavors</p>
+        <h2 class="h2">Four ways into the wild.</h2></div>
+        <p class="flavors__counter" id="flavors-counter"><span class="cur">01</span> / 04</p>
+      </header>
+
+      <p class="flavors__word" id="flavors-word" aria-hidden="true"><span>Sharp.</span></p>
+
+      <div class="flavors__panels" id="flavors-panels">
+        <!-- 01 -->
+        <article class="flavor-panel is-active" data-index="0" data-flavor="xoconostle">
+          <p class="flavor-panel__num">01 / 04</p>
+          <h3 class="flavor-panel__word">Sharp.</h3>
+          <p class="flavor-panel__name">Xoconostle + Key Lime + Sea Salt</p>
+          <p class="flavor-panel__desc">Sour xoconostle and key lime hit first. Sea salt pulls the tequila forward and leaves the finish dry, crisp, and alive.</p>
+          <div class="flavor-panel__meta">
+            <div><h4>Taste</h4><ul class="chips"><li>Tart</li><li>Mineral</li><li>Crisp</li></ul></div>
+            <div><h4>Made with</h4><ul class="list"><li>Real tequila</li><li>Xoconostle</li><li>Key lime</li><li>Sea salt</li></ul></div>
+          </div>
+          <a class="btn btn--ink" href="#shop" data-scroll>Explore Xoconostle</a>
+          <img class="can-fallback flavor-panel__img" src="/img/cut-xoconostle-front.png" alt="Tequila Town Xoconostle + Key Lime + Sea Salt can" width="417" height="1137" loading="lazy" />
+        </article>
+        <!-- 02 -->
+        <article class="flavor-panel" data-index="1" data-flavor="guava">
+          <p class="flavor-panel__num">02 / 04</p>
+          <h3 class="flavor-panel__word">Bloom.</h3>
+          <p class="flavor-panel__name">Guava + Jamaica + Pink Peppercorn</p>
+          <p class="flavor-panel__desc">Pink guava brings the fruit. Jamaica brings the tart. Pink peppercorn gives it a dry floral spark that refuses to disappear into the background.</p>
+          <div class="flavor-panel__meta">
+            <div><h4>Taste</h4><ul class="chips"><li>Juicy</li><li>Floral</li><li>Bright</li></ul></div>
+            <div><h4>Made with</h4><ul class="list"><li>Real tequila</li><li>Pink guava</li><li>Jamaica hibiscus</li><li>Pink peppercorn</li></ul></div>
+          </div>
+          <a class="btn btn--ink" href="#shop" data-scroll>Explore Guava + Jamaica</a>
+          <img class="can-fallback flavor-panel__img" src="/img/cut-guava-front.png" alt="Tequila Town Guava + Jamaica + Pink Peppercorn can" width="418" height="1137" loading="lazy" />
+        </article>
+        <!-- 03 -->
+        <article class="flavor-panel" data-index="2" data-flavor="tamarind">
+          <p class="flavor-panel__num">03 / 04</p>
+          <h3 class="flavor-panel__word">Heat.</h3>
+          <p class="flavor-panel__name">Tamarind + Mandarin + Chile de Árbol</p>
+          <p class="flavor-panel__desc">Deep tamarind, bright mandarin, and a clean flash of chile de árbol.<br /> Sour first. Citrus second. Heat at the end.</p>
+          <div class="flavor-panel__meta">
+            <div><h4>Taste</h4><ul class="chips"><li>Tangy</li><li>Citrus</li><li>Warm</li></ul></div>
+            <div><h4>Made with</h4><ul class="list"><li>Real tequila</li><li>Tamarind</li><li>Mandarin</li><li>Chile de árbol</li></ul></div>
+          </div>
+          <a class="btn btn--ink" href="#shop" data-scroll>Explore Tamarind + Mandarin</a>
+          <img class="can-fallback flavor-panel__img" src="/img/cut-tamarind-front.png" alt="Tequila Town Tamarind + Mandarin + Chile de Árbol can" width="417" height="1137" loading="lazy" />
+        </article>
+        <!-- 04 -->
+        <article class="flavor-panel" data-index="3" data-flavor="guanabana">
+          <p class="flavor-panel__num">04 / 04</p>
+          <h3 class="flavor-panel__word">Green.</h3>
+          <p class="flavor-panel__name">Guanábana + Mexican Lime + Basil</p>
+          <p class="flavor-panel__desc">Soft tropical guanábana meets sharp Mexican lime and fresh basil.<br /> Lush on the nose. Bright in the glass. Clean on the finish.</p>
+          <div class="flavor-panel__meta">
+            <div><h4>Taste</h4><ul class="chips"><li>Tropical</li><li>Herbal</li><li>Fresh</li></ul></div>
+            <div><h4>Made with</h4><ul class="list"><li>Real tequila</li><li>Guanábana</li><li>Mexican lime</li><li>Basil</li></ul></div>
+          </div>
+          <a class="btn btn--ink" href="#shop" data-scroll>Explore Guanábana</a>
+          <img class="can-fallback flavor-panel__img" src="/img/cut-guanabana-front.png" alt="Tequila Town Guanábana + Mexican Lime + Basil can" width="416" height="1136" loading="lazy" />
+        </article>
+      </div>
+
+      <nav class="flavors__dots" id="flavors-dots" aria-label="Flavors">
+        <button type="button" data-go="0" aria-label="Xoconostle" class="is-active">01</button>
+        <button type="button" data-go="1" aria-label="Guava + Jamaica">02</button>
+        <button type="button" data-go="2" aria-label="Tamarind + Mandarin">03</button>
+        <button type="button" data-go="3" aria-label="Guanábana">04</button>
+      </nav>
+      <div class="flavors__progress" aria-hidden="true"><i id="flavors-bar"></i></div>
+    </div>
+  </section>
+
+  <!-- 03 / INSIDE -->
+  <section class="inside" id="inside" data-theme="ink">
+    <div class="inside__stage" id="inside-stage">
+
+      <div class="inside__grid">
+        <div class="inside__left">
+      <header class="inside__head">
+        <p class="eyebrow">03 / Inside</p>
+        <h2 class="h2">Nothing to hide.</h2>
+        <p class="inside__lede">Real tequila. Real fruit. Mineral water. Every ingredient has a reason to be here.</p>
+      </header>
+        <div class="inside__tabs" role="tablist" aria-label="Ingredients" id="inside-tabs">
+          <button role="tab" id="tab-0" aria-selected="true" aria-controls="ing-0" type="button"><span class="n">01</span><span class="t">Real Tequila</span></button>
+          <button role="tab" id="tab-1" aria-selected="false" aria-controls="ing-1" type="button" tabindex="-1"><span class="n">02</span><span class="t">Real Fruit</span></button>
+          <button role="tab" id="tab-2" aria-selected="false" aria-controls="ing-2" type="button" tabindex="-1"><span class="n">03</span><span class="t">Botanicals</span></button>
+          <button role="tab" id="tab-3" aria-selected="false" aria-controls="ing-3" type="button" tabindex="-1"><span class="n">04</span><span class="t">Mineral Water</span></button>
+        </div>
+        </div>
+
+        <div class="inside__can" aria-hidden="true">
+          <img class="can-fallback inside__fallback" src="/img/cut-xoconostle-front.png" alt="" width="417" height="1137" loading="lazy" />
+          <div class="inside__glow"></div>
+        </div>
+
+        <div class="inside__details">
+          <article class="ingredient is-active" id="ing-0" role="tabpanel" aria-labelledby="tab-0">
+            <p class="ingredient__num">01 / 04</p>
+            <h3 class="ingredient__title">Made with real tequila from Mexico.</h3>
+            <p class="ingredient__body">Not malt liquor. Not fermented sugar pretending to be tequila. The agave stays present from the first sip to the last.</p>
+            <dl class="specs">
+              <div><dt>Source</dt><dd>Tequila, Mexico</dd></div>
+              <div><dt>Role</dt><dd>Earth, pepper, and agave</dd></div>
+              <div><dt>Why it matters</dt><dd>If the tequila disappears, the drink failed.</dd></div>
+            </dl>
+          </article>
+          <article class="ingredient" id="ing-1" role="tabpanel" aria-labelledby="tab-1" hidden>
+            <p class="ingredient__num">02 / 04</p>
+            <h3 class="ingredient__title">Each flavor begins with fruit you can actually recognize.</h3>
+            <p class="ingredient__body">Xoconostle. Guava. Jamaica. Tamarind. Mandarin. Guanábana. Mexican lime.</p>
+            <dl class="specs">
+              <div><dt>Source</dt><dd>Fruit and botanical ingredients</dd></div>
+              <div><dt>Role</dt><dd>Real flavor and natural acidity</dd></div>
+              <div><dt>Why it matters</dt><dd>It should taste grown, not manufactured.</dd></div>
+            </dl>
+          </article>
+          <article class="ingredient" id="ing-2" role="tabpanel" aria-labelledby="tab-2" hidden>
+            <p class="ingredient__num">03 / 04</p>
+            <h3 class="ingredient__title">Basil, pink peppercorn, chile de árbol, hibiscus, and mineral salt sharpen the fruit without burying the tequila.</h3>
+            <dl class="specs">
+              <div><dt>Source</dt><dd>Herbs, flowers, spice, and minerals</dd></div>
+              <div><dt>Role</dt><dd>Depth, aroma, and finish</dd></div>
+              <div><dt>Why it matters</dt><dd>Every ingredient earns its place.</dd></div>
+            </dl>
+          </article>
+          <article class="ingredient" id="ing-3" role="tabpanel" aria-labelledby="tab-3" hidden>
+            <p class="ingredient__num">04 / 04</p>
+            <h3 class="ingredient__title">Bright carbonation opens the fruit, lifts the tequila, and keeps the finish clean.</h3>
+            <dl class="specs">
+              <div><dt>Source</dt><dd>Sparkling mineral water</dd></div>
+              <div><dt>Role</dt><dd>Lift and refreshment</dd></div>
+              <div><dt>Why it matters</dt><dd>A tequila cocktail should make you want the next sip.</dd></div>
+            </dl>
+          </article>
+        </div>
+      </div>
+
+      <div class="marquee marquee--inside" aria-hidden="true">
+        <div class="marquee__track"><span>Real tequila. Real fruit. Mineral water. That’s the point.&nbsp;&nbsp;·&nbsp;&nbsp;</span><span>Real tequila. Real fruit. Mineral water. That’s the point.&nbsp;&nbsp;·&nbsp;&nbsp;</span><span>Real tequila. Real fruit. Mineral water. That’s the point.&nbsp;&nbsp;·&nbsp;&nbsp;</span><span>Real tequila. Real fruit. Mineral water. That’s the point.&nbsp;&nbsp;·&nbsp;&nbsp;</span></div>
+      </div>
+      <p class="sr-only">Real tequila. Real fruit. Mineral water. That’s the point.</p>
+    </div>
+  </section>
+
+  <!-- 04 / STORY -->
+  <section class="story" id="story" data-theme="bone">
+    <div class="story__pin" id="story-pin">
+      <div class="story__track" id="story-track">
+        <article class="chapter chapter--intro" data-accent="xoconostle">
+          <p class="eyebrow">04 / Story</p>
+          <h2 class="h2 chapter__big">Mexico has more than <em>one</em> flavor.</h2>
+          <div class="chapter__cols">
+            <p>Most canned tequila drinks keep recycling the same ideas.<br />Lime. Mango. Grapefruit. More sugar.</p>
+            <p>Mexico gave the world tequila, yet the canned cocktail aisle stopped exploring. Tequila Town starts where the safe flavors end.</p>
+          </div>
+          <p class="chapter__scroll" aria-hidden="true">Scroll <span class="arrow">&rarr;</span></p>
+        </article>
+
+        <article class="chapter" data-accent="xoconostle">
+          <img class="chapter__art" src="/img/botanical-xoconostle.png" alt="" aria-hidden="true" loading="lazy" />
+          <p class="eyebrow">Chapter 01 / The Problem</p>
+          <h3 class="chapter__title">Everything tasted the same.</h3>
+          <p class="chapter__body">The tequila was hidden. The fruit tasted artificial. The finish was either too sweet or completely forgettable.</p>
+          <p class="chapter__kicker">We knew the can could do more.</p>
+        </article>
+
+        <article class="chapter" data-accent="guava">
+          <img class="chapter__art" src="/img/botanical-guava.png" alt="" aria-hidden="true" loading="lazy" />
+          <p class="eyebrow">Chapter 02 / The Search</p>
+          <h3 class="chapter__title">We went past the obvious.</h3>
+          <p class="chapter__body">We looked to Mexican fruit, market drinks, regional ingredients, herbs, flowers, salt, heat, and the flavors people remember long after the glass is empty.</p>
+          <p class="chapter__kicker">Not exotic for attention.<br />Different for a reason.</p>
+        </article>
+
+        <article class="chapter" data-accent="tamarind">
+          <img class="chapter__art" src="/img/botanical-tamarind.png" alt="" aria-hidden="true" loading="lazy" />
+          <p class="eyebrow">Chapter 03 / The Tequila</p>
+          <h3 class="chapter__title">Start with the real thing.</h3>
+          <p class="chapter__body">We partnered with tequila makers who understand the spirit before it ever reaches the can.</p>
+          <p class="chapter__kicker">Because sparkling tequila should still taste like tequila.</p>
+        </article>
+
+        <article class="chapter" data-accent="guanabana">
+          <img class="chapter__art" src="/img/botanical-guanabana.png" alt="" aria-hidden="true" loading="lazy" />
+          <p class="eyebrow">Chapter 04 / The Flavors</p>
+          <h3 class="chapter__title">Build every can around contrast.</h3>
+          <ul class="chapter__rules">
+            <li>Fruit needs acid.</li>
+            <li>Sweetness needs restraint.</li>
+            <li>Heat needs timing.</li>
+            <li>Tequila needs room to speak.</li>
+          </ul>
+          <p class="chapter__kicker">That balance became the first four flavors.</p>
+        </article>
+
+        <article class="chapter chapter--last" data-accent="xoconostle">
+          <img class="chapter__art" src="/img/botanical-xoconostle.png" alt="" aria-hidden="true" loading="lazy" />
+          <p class="eyebrow">Chapter 05 / Tequila Town</p>
+          <h3 class="chapter__title">Made to leave the shelf.</h3>
+          <p class="chapter__body">Tequila Town was not created to sit quietly in a cooler.</p>
+          <p class="chapter__body">It was created for festivals, rooftops, beaches, backyards, late nights, new cities, and whatever happens next.</p>
+          <p class="chapter__kicker chapter__kicker--big">Open one and go.</p>
+        </article>
+      </div>
+      <div class="story__progress" aria-hidden="true">
+        <span class="story__progress-label">Ch.</span>
+        <div class="story__progress-bar"><i id="story-bar"></i></div>
+        <span class="story__progress-count" id="story-count">00 / 05</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 / THE STANDARD -->
+  <section class="standard" id="standard" data-theme="ink">
+    <header class="standard__head">
+      <p class="eyebrow">05 / The Standard</p>
+      <h2 class="h2">No shortcuts in the can.</h2>
+    </header>
+    <ol class="standard__grid">
+      <li data-reveal><span class="standard__n">01</span><h3>Real tequila</h3><p>If the tequila disappears, the drink failed.</p></li>
+      <li data-reveal><span class="standard__n">02</span><h3>Flavor with a point</h3><p>Every fruit, flower, herb, spice, and grain of salt has a job.</p></li>
+      <li data-reveal><span class="standard__n">03</span><h3>Dry over sweet</h3><p>Refreshment should never taste like syrup.</p></li>
+      <li data-reveal><span class="standard__n">04</span><h3>Nothing generic</h3><p>You can buy ordinary anywhere.</p></li>
+    </ol>
+    <div class="marquee marquee--standard" aria-hidden="true">
+      <div class="marquee__track"><span>Real tequila <i>·</i> Wild fruit <i>·</i> Clean finish <i>·</i>&nbsp;</span><span>Real tequila <i>·</i> Wild fruit <i>·</i> Clean finish <i>·</i>&nbsp;</span><span>Real tequila <i>·</i> Wild fruit <i>·</i> Clean finish <i>·</i>&nbsp;</span></div>
+    </div>
+    <p class="sr-only">Real tequila. Wild fruit. Clean finish.</p>
+  </section>
+
+  <!-- 06 / FIND -->
+  <section class="find" id="find" data-theme="bone">
+    <header class="find__head">
+      <p class="eyebrow">06 / Find Tequila Town</p>
+      <h2 class="h2">Find us <em>in the wild.</em></h2>
+      <p class="find__lede">Tequila Town is launching through events, partner venues, and select retailers. Join the list and we will tell you when the first cold can lands near you.</p>
+    </header>
+    <ul class="find__rows">
+      <li data-reveal>
+        <div class="find__row-head"><span class="find__n">A</span><h3>Tequila Town Events</h3></div>
+        <p>First pours, flavor flights, and limited releases.</p>
+        <a class="link-arrow" href="#" data-soon>See upcoming events <span class="arrow" aria-hidden="true">&rarr;</span></a>
+      </li>
+      <li data-reveal>
+        <div class="find__row-head"><span class="find__n">B</span><h3>Bars + Venues</h3></div>
+        <p>Available through select hospitality partners.</p>
+        <a class="link-arrow" href="#" data-soon>Find a pour <span class="arrow" aria-hidden="true">&rarr;</span></a>
+      </li>
+      <li data-reveal>
+        <div class="find__row-head"><span class="find__n">C</span><h3>Retail</h3></div>
+        <p>Coming to select bottle shops and retailers.</p>
+        <a class="link-arrow" href="#" data-soon>Find a store <span class="arrow" aria-hidden="true">&rarr;</span></a>
+      </li>
+    </ul>
+    <div class="find__city" data-reveal>
+      <h3>Want Tequila Town in your city?</h3>
+      <button class="btn btn--ink" type="button" data-soon>Bring it here</button>
+    </div>
+  </section>
+
+  <!-- 07 / SHOP -->
+  <section class="shop" id="shop" data-theme="bone">
+    <header class="shop__head">
+      <p class="eyebrow">07 / Shop</p>
+      <h2 class="h2">Meet the first four.</h2>
+    </header>
+
+    <div class="pack" data-reveal>
+      <div class="pack__cans" aria-hidden="true">
+        <img src="/img/cut-xoconostle-front.png" alt="" width="417" height="1137" loading="lazy" />
+        <img src="/img/cut-guava-front.png" alt="" width="418" height="1137" loading="lazy" />
+        <img src="/img/cut-tamarind-front.png" alt="" width="417" height="1137" loading="lazy" />
+        <img src="/img/cut-guanabana-front.png" alt="" width="416" height="1136" loading="lazy" />
+      </div>
+      <div class="pack__info">
+        <p class="eyebrow">The Wild Four</p>
+        <h3 class="pack__title">One pack. Four completely different ways to drink tequila.</h3>
+        <ul class="pack__list">
+          <li><i style="--c:var(--xoconostle)"></i>Xoconostle + Key Lime + Sea Salt</li>
+          <li><i style="--c:var(--guava)"></i>Guava + Jamaica + Pink Peppercorn</li>
+          <li><i style="--c:var(--tamarind)"></i>Tamarind + Mandarin + Chile de Árbol</li>
+          <li><i style="--c:var(--guanabana)"></i>Guanábana + Mexican Lime + Basil</li>
+        </ul>
+        <div class="pack__sizes" role="radiogroup" aria-label="Pack size" id="pack-sizes">
+          <button type="button" role="radio" aria-checked="true" data-size="4">4-Pack</button>
+          <button type="button" role="radio" aria-checked="false" data-size="8">8-Pack</button>
+          <button type="button" role="radio" aria-checked="false" data-size="12">12-Pack</button>
+        </div>
+        <div class="pack__buy">
+          <p class="price" id="pack-price"><span class="price__label">Price</span><span class="price__value">TBA</span></p>
+          <button class="btn btn--ink" type="button" data-add="wild-four" data-name="The Wild Four">Add to cooler</button>
+        </div>
+      </div>
+    </div>
+
+    <ul class="products">
+      <li class="product" data-flavor="xoconostle" data-reveal>
+        <div class="product__img">
+          <img class="front" src="/img/cut-xoconostle-front.png" alt="Xoconostle + Key Lime + Sea Salt, front of can" width="417" height="1137" loading="lazy" />
+          <img class="back" src="/img/cut-xoconostle-back.png" alt="" width="417" height="1137" loading="lazy" />
+        </div>
+        <p class="product__eyebrow">Xoconostle + Key Lime + Sea Salt</p>
+        <h3>Xoconostle</h3>
+        <p class="product__desc">The sharp one. Sour cactus, bright lime, and a clean mineral finish.</p>
+        <button class="btn btn--ghost" type="button" data-add="xoconostle" data-name="Xoconostle">Shop Xoconostle</button>
+      </li>
+      <li class="product" data-flavor="guava" data-reveal>
+        <div class="product__img">
+          <img class="front" src="/img/cut-guava-front.png" alt="Guava + Jamaica + Pink Peppercorn, front of can" width="418" height="1137" loading="lazy" />
+          <img class="back" src="/img/cut-guava-back.png" alt="" width="418" height="1137" loading="lazy" />
+        </div>
+        <p class="product__eyebrow">Guava + Jamaica + Pink Peppercorn</p>
+        <h3>Guava + Jamaica</h3>
+        <p class="product__desc">The floral one. Juicy guava, tart hibiscus, and a dry peppery lift.</p>
+        <button class="btn btn--ghost" type="button" data-add="guava" data-name="Guava + Jamaica">Shop Guava + Jamaica</button>
+      </li>
+      <li class="product" data-flavor="tamarind" data-reveal>
+        <div class="product__img">
+          <img class="front" src="/img/cut-tamarind-front.png" alt="Tamarind + Mandarin + Chile de Árbol, front of can" width="417" height="1137" loading="lazy" />
+          <img class="back" src="/img/cut-tamarind-back.png" alt="" width="417" height="1137" loading="lazy" />
+        </div>
+        <p class="product__eyebrow">Tamarind + Mandarin + Chile de Árbol</p>
+        <h3>Tamarind + Mandarin</h3>
+        <p class="product__desc">The hot one. Deep tamarind, bright citrus, and delayed chile heat.</p>
+        <button class="btn btn--ghost" type="button" data-add="tamarind" data-name="Tamarind + Mandarin">Shop Tamarind + Mandarin</button>
+      </li>
+      <li class="product" data-flavor="guanabana" data-reveal>
+        <div class="product__img">
+          <img class="front" src="/img/cut-guanabana-front.png" alt="Guanábana + Mexican Lime + Basil, front of can" width="416" height="1136" loading="lazy" />
+          <img class="back" src="/img/cut-guanabana-back.png" alt="" width="416" height="1136" loading="lazy" />
+        </div>
+        <p class="product__eyebrow">Guanábana + Mexican Lime + Basil</p>
+        <h3>Guanábana</h3>
+        <p class="product__desc">The green one. Soft tropical fruit, sharp lime, and fresh basil.</p>
+        <button class="btn btn--ghost" type="button" data-add="guanabana" data-name="Guanábana">Shop Guanábana</button>
+      </li>
+    </ul>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <section class="newsletter" data-theme="ink">
+    <div class="newsletter__inner" data-reveal>
+      <p class="eyebrow">Newsletter</p>
+      <h2 class="h2">Get there before the cooler <em>empties.</em></h2>
+      <p class="newsletter__lede">New cities. Limited flavors. First pours. Nothing else.</p>
+      <form class="email-form" id="newsletter-form" novalidate>
+        <label class="sr-only" for="nl-email">Email address</label>
+        <input id="nl-email" type="email" name="email" placeholder="Email address" autocomplete="email" required />
+        <button class="btn btn--bone" type="submit">Get on the list</button>
+        <p class="email-form__msg" aria-live="polite"></p>
+      </form>
+      <p class="newsletter__micro">No spam. No daily nonsense. Just drops worth opening.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="footer" data-theme="ink">
+  <div class="footer__top">
+    <div class="footer__brand">
+      <p class="footer__logo">Tequila Town</p>
+      <p>Real tequila. Wild fruit. Mineral water.</p>
+    </div>
+    <div class="footer__cols">
+      <div><h4>Site</h4><a href="#flavors" data-scroll>Flavors</a><a href="#inside" data-scroll>Inside</a><a href="#story" data-scroll>Story</a><a href="#find" data-scroll>Find Us</a><a href="#shop" data-scroll>Shop</a></div>
+      <div><h4>Follow</h4><a href="#" data-soon>Instagram</a><a href="#" data-soon>TikTok</a><a href="#" data-soon>YouTube</a></div>
+      <div><h4>Legal</h4><a href="#" data-soon>Privacy</a><a href="#" data-soon>Terms</a><a href="#" data-soon>Accessibility</a><a href="#" data-soon>Shipping</a><a href="#" data-soon>Responsible Drinking</a></div>
+    </div>
+  </div>
+  <p class="footer__wordmark" aria-hidden="true">Tequila Town</p>
+  <div class="footer__bottom">
+    <p>Made with tequila from Mexico.</p>
+    <p>© 2026 Tequila Town. All rights reserved.</p>
+    <p>Please enjoy responsibly.</p>
+  </div>
+  <div class="footer__band" aria-hidden="true"><i style="background:var(--xoconostle)"></i><i style="background:var(--guava)"></i><i style="background:var(--tamarind)"></i><i style="background:var(--guanabana)"></i></div>
+</footer>
+
+<!-- CART DRAWER -->
+<div class="scrim" id="scrim" hidden></div>
+<aside class="cart" id="cart" aria-label="Cooler" aria-hidden="true">
+  <header class="cart__head">
+    <p class="eyebrow">Your cooler</p>
+    <button class="cart__close" id="cart-close" type="button" aria-label="Close cooler">&times;</button>
+  </header>
+  <div class="cart__empty" id="cart-empty">
+    <h3>Your cooler is empty.</h3>
+    <p>That is an easy problem to fix.</p>
+    <a class="btn btn--ink" href="#flavors" data-scroll data-close-cart>Meet the four</a>
+  </div>
+  <ul class="cart__items" id="cart-items" hidden></ul>
+  <footer class="cart__foot" id="cart-foot" hidden>
+    <p class="cart__note">Prices and checkout open at launch.</p>
+    <button class="btn btn--ink" type="button" data-soon>Check out</button>
+  </footer>
+</aside>
+
+<!-- COMING SOON MODAL -->
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
+  <div class="modal__card">
+    <button class="modal__close" id="modal-close" type="button" aria-label="Close">&times;</button>
+    <p class="eyebrow">Coming soon</p>
+    <h2 id="modal-title">Tequila Town is <em>almost here.</em></h2>
+    <p>The first four flavors are getting ready to leave town.</p>
+    <p>Join the list for launch access, first pours, and the first chance to order.</p>
+    <form class="email-form email-form--dark" id="modal-form" novalidate>
+      <label class="sr-only" for="modal-email">Email address</label>
+      <input id="modal-email" type="email" name="email" placeholder="Email address" autocomplete="email" required />
+      <button class="btn btn--ink" type="submit">Notify me</button>
+      <p class="email-form__msg" aria-live="polite"></p>
+    </form>
+    <a class="link-arrow" href="#flavors" data-scroll data-close-modal>Explore the flavors <span class="arrow" aria-hidden="true">&rarr;</span></a>
+  </div>
+</div>
+
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
