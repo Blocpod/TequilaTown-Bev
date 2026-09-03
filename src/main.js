@@ -266,6 +266,8 @@ function goIngredient(i) {
   if (i === insideActive) return;
   const prev = ingredients[insideActive], next = ingredients[i];
   insideActive = i;
+  setFlavor(i); // each ingredient step shows a different can
+  const fb = $('.inside__fallback'); if (fb) fb.src = `/img/cut-${FLAVORS[i]}-front.png`;
   tabs.forEach((t, k) => { t.setAttribute('aria-selected', String(k === i)); t.tabIndex = k === i ? 0 : -1; });
   const outEls = $$(':scope > *', prev), inEls = $$(':scope > *', next);
   if (reduced) { prev.hidden = true; prev.classList.remove('is-active'); next.hidden = false; next.classList.add('is-active'); return; }
@@ -288,6 +290,7 @@ if (!isStatic && !mobile) {
   insideST = ScrollTrigger.create({
     trigger: '#inside-stage', pin: true, start: 'top top', end: '+=220%', anticipatePin: 1,
     onUpdate: (self) => { if (!insideUser) { const i = Math.min(3, Math.floor(self.progress * 4)); if (i !== insideActive) goIngredient(i); } insideSnap(); },
+    onToggle: (self) => { if (self.isActive) setFlavor(insideActive, { spin: insideActive !== activeFlavor }); },
     onLeave: () => { insideUser = false; }, onLeaveBack: () => { insideUser = false; },
   });
 }
