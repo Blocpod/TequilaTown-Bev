@@ -257,12 +257,12 @@ if (!isStatic) {
 window.__dbg = () => ({ heroVisible: heroVisible(), timer: !!heroTimer, activeFlavor, flavorsActive });
 
 /* ------------------------------------------------------------------ 03 inside */
-// Turn the can to the part of the label that matches the topic.
+// Every ingredient step spins the can a full turn and lands on the front (Joe's rule: start and end on the front).
 const TOPIC_VIEW = [
-  { rotY: 0, tiltX: 0, dy: 0 },                    // Real Tequila: wordmark + "Sparkling Tequila"
-  { rotY: 0.32, tiltX: -0.26, dy: 0.13 },          // Real Fruit: tip forward onto the fruit engraving
-  { rotY: Math.PI - 0.6, tiltX: -0.1, dy: 0.06 },  // Botanicals: three-quarter turn to the back botanical
-  { rotY: Math.PI, tiltX: 0, dy: 0 },              // Mineral Water: nutrition facts + "Real Tequila · Real Fruit · Mineral Water"
+  { rotY: 0, tiltX: 0, dy: 0 },
+  { rotY: 0, tiltX: 0, dy: 0 },
+  { rotY: 0, tiltX: 0, dy: 0 },
+  { rotY: 0, tiltX: 0, dy: 0 },
 ];
 function applyTopicView(i) {
   if (!can || mobile) return;
