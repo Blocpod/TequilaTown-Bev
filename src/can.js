@@ -85,7 +85,11 @@ export function createCan(canvas) {
   });
 
   // ---- state ----
-  const pose = { nx: 0, ny: -0.04, scale: 0, rotY: 0, tiltX: 0, tiltZ: 0, float: 1, shadow: 1 };
+  const POSE_DEFAULTS = { nx: 0, ny: -0.04, scale: 0, rotY: 0, tiltX: 0, tiltZ: 0, float: 1, shadow: 1 };
+  const POSE_KEYS = Object.keys(POSE_DEFAULTS);
+  const pose = { ...POSE_DEFAULTS };
+  // additive topic layer (Inside section): blended by topicMix so travels can fade it in/out without fighting tweens
+  const topic = { rotY: 0, tiltX: 0, dy: 0, mix: 0 };
   const state = { spin: 0, sway: 0.11, scrollSpin: 0 };
   const TAU = Math.PI * 2;
   const CAN_H = BODY + 0.25 + 0.11, CAN_W = 2 * R;
@@ -133,7 +137,7 @@ export function createCan(canvas) {
   let hidden = false, t0 = performance.now();
   function frame() {
     const t = (performance.now() - t0) / 1000;
-    if (!Number.isFinite(pose.scale) || !Number.isFinite(pose.nx)) { console.warn('can pose NaN', { ...pose }); Object.assign(pose, { nx: 0, ny: 0, scale: 0 }); }
+    for (const k of POSE_KEYS) if (!Number.isFinite(pose[k])) { console.warn('can pose NaN', k); pose[k] = POSE_DEFAULTS[k]; }
     if (pose.scale < 0.003) {
       if (!hidden) { renderer.clear(); hidden = true; }
       return;
@@ -147,11 +151,11 @@ export function createCan(canvas) {
     let s = (pose.scale * 2 * halfH) / CAN_H;
     s = Math.min(s, (0.26 * 2 * halfW) / CAN_W);
     group.position.x = pose.nx * halfW;
-    group.position.y = pose.ny * halfH + Math.sin(t * 1.15) * 0.05 * s * pose.float;
+    group.position.y = (pose.ny + topic.dy * topic.mix) * halfH + Math.sin(t * 1.15) * 0.05 * s * pose.float;
     group.scale.setScalar(s);
-    group.rotation.y = pose.rotY + state.spin; // front-facing at rest; only swap spins rotate, always ending on a full turn
+    group.rotation.y = pose.rotY + topic.rotY * topic.mix + state.spin; // front-facing at rest; swaps always end on a full turn
     group.rotation.z = pose.tiltZ + mouse.x * -0.04 + Math.sin(t * 0.6) * 0.012;
-    group.rotation.x = pose.tiltX + mouse.y * 0.035 + Math.sin(t * 0.9) * 0.01;
+    group.rotation.x = pose.tiltX + topic.tiltX * topic.mix + mouse.y * 0.035 + Math.sin(t * 0.9) * 0.01;
 
     shadow.position.set(group.position.x, group.position.y - 1.72 * s - Math.sin(t * 1.15) * 0.03, 0);
     shadow.scale.set(s, s, 1);
@@ -161,7 +165,7 @@ export function createCan(canvas) {
   gsap.ticker.add(frame);
 
   return {
-    pose, state, setFlavor, to, set, kick,
+    pose, state, topic, setFlavor, to, set, kick,
     labelName() { return FLAVORS.find((f) => textures[f] === labelMat.map) || null; },
     get ready() { return ready; },
     readyPromise,

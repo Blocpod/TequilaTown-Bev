@@ -82,18 +82,18 @@ function setFlavor(i, { spin = true } = {}) {
 
 /* ------------------------------------------------------------------ poses */
 const POSE = mobile ? {
-  hero: { nx: 0, ny: 0.27, scale: 0.40, rotY: 0, tiltZ: 0, float: 1, shadow: 0.6 },
-  flavors: { nx: 0.0, ny: 0.34, scale: 0.29, rotY: 0, tiltZ: -0.06, float: 1, shadow: 0.5 },
-  inside: { nx: 0, ny: 0.3, scale: 0, rotY: 0, tiltZ: 0, float: 0, shadow: 0 },
-  exit: { nx: 0, ny: 0.3, scale: 0, rotY: 0, tiltZ: 0, float: 0, shadow: 0 },
+  hero: { nx: 0, ny: 0.27, scale: 0.40, rotY: 0, tiltX: 0, tiltZ: 0, float: 1, shadow: 0.6 },
+  flavors: { nx: 0.0, ny: 0.34, scale: 0.29, rotY: 0, tiltX: 0, tiltZ: -0.06, float: 1, shadow: 0.5 },
+  inside: { nx: 0, ny: 0.3, scale: 0, rotY: 0, tiltX: 0, tiltZ: 0, float: 0, shadow: 0 },
+  exit: { nx: 0, ny: 0.3, scale: 0, rotY: 0, tiltX: 0, tiltZ: 0, float: 0, shadow: 0 },
 } : {
-  hero: { nx: 0, ny: -0.03, scale: 0.62, rotY: 0, tiltZ: 0, float: 1, shadow: 1 },
-  flavors: { nx: 0.38, ny: -0.02, scale: 0.60, rotY: 0, tiltZ: -0.07, float: 1, shadow: 1 },
-  inside: { nx: 0, ny: -0.05, scale: 0.64, rotY: 0, tiltZ: 0, float: 1, shadow: 0.8 },
-  exit: { nx: 0, ny: -1.7, scale: 0.35, rotY: 0.9, tiltZ: 0.25, float: 0, shadow: 0 },
+  hero: { nx: 0, ny: -0.03, scale: 0.62, rotY: 0, tiltX: 0, tiltZ: 0, float: 1, shadow: 1 },
+  flavors: { nx: 0.38, ny: -0.02, scale: 0.60, rotY: 0, tiltX: 0, tiltZ: -0.07, float: 1, shadow: 1 },
+  inside: { nx: 0, ny: -0.05, scale: 0.64, rotY: 0, tiltX: 0, tiltZ: 0, float: 1, shadow: 0.8 },
+  exit: { nx: 0, ny: -1.7, scale: 0.35, rotY: 0.9, tiltX: 0, tiltZ: 0.25, float: 0, shadow: 0 },
 };
 const lerp = (a, b, t) => a + (b - a) * t;
-const lerpPose = (A, B, t) => Object.fromEntries(Object.keys(A).map((k) => [k, lerp(A[k], B[k], t)]));
+const lerpPose = (A, B, t) => Object.fromEntries(Object.keys(A).map((k) => [k, lerp(A[k], B[k] ?? A[k], t)]));
 const easeIO = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
 /* ------------------------------------------------------------------ age gate + intro */
@@ -164,18 +164,14 @@ if (!isStatic) {
 
 /* ------------------------------------------------------------------ can travel between sections */
 if (!isStatic) {
-  const travel = (trigger, from, to, extra) => {
-    let snap = null;
-    return ScrollTrigger.create({
-      trigger, start: 'top bottom', end: 'top top', refreshPriority: -1,
-      onEnter: () => { snap = { ...from, rotY: can.pose.rotY, tiltX: can.pose.tiltX, ny: can.pose.ny }; },
-      onUpdate: (self) => { const p = easeIO(self.progress); can.set(lerpPose(snap || from, to, p)); extra?.(p); },
-      onLeaveBack: () => { if (trigger !== '#flavors') { can.set(snap || from); snap = null; } },
-    });
-  };
+  const travel = (trigger, from, to, extra) => ScrollTrigger.create({
+    trigger, start: 'top bottom', end: 'top top', refreshPriority: -1,
+    onUpdate: (self) => { if (self.progress <= 0) return; const p = easeIO(self.progress); can.set(lerpPose(from, to, p)); extra?.(p); },
+    onLeaveBack: () => { if (trigger !== '#flavors') can.set(from); extra?.(0); },
+  });
   travel('#flavors', POSE.hero, POSE.flavors);
-  travel('#inside', POSE.flavors, POSE.inside);
-  travel('#story', POSE.inside, POSE.exit);
+  travel('#inside', POSE.flavors, POSE.inside, (p) => { can.topic.mix = p; });       // topic layer fades in on the way into Inside
+  travel('#story', POSE.inside, POSE.exit, (p) => { can.topic.mix = 1 - p; });      // and out on the way to Story
   // In the hero, stop scroll-travel from fighting the intro tween: only write when progress > 0.
   ScrollTrigger.getAll().forEach((st) => { if (st.vars.trigger === '#flavors') {
     const orig = st.vars.onUpdate; st.vars.onUpdate = (s) => { if (s.progress > 0.001) orig(s); };
@@ -268,12 +264,10 @@ const TOPIC_VIEW = [
   { rotY: Math.PI - 0.6, tiltX: -0.1, dy: 0.06 },  // Botanicals: three-quarter turn to the back botanical
   { rotY: Math.PI, tiltX: 0, dy: 0 },              // Mineral Water: nutrition facts + "Real Tequila · Real Fruit · Mineral Water"
 ];
-function applyTopicView(i, instant = false) {
+function applyTopicView(i) {
   if (!can || mobile) return;
   const v = TOPIC_VIEW[i];
-  const target = { rotY: v.rotY, tiltX: v.tiltX, ny: POSE.inside.ny + v.dy };
-  if (instant) { Object.assign(can.pose, target); return; }
-  can.to(target, { duration: 1.3, ease: 'power3.inOut' });
+  gsap.to(can.topic, { rotY: v.rotY, tiltX: v.tiltX, dy: v.dy, duration: 1.3, ease: 'power3.inOut', overwrite: 'auto' });
 }
 const tabs = $$('#inside-tabs [role="tab"]');
 const ingredients = $$('.ingredient');
