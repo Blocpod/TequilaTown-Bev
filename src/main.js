@@ -164,11 +164,15 @@ if (!isStatic) {
 
 /* ------------------------------------------------------------------ can travel between sections */
 if (!isStatic) {
-  const travel = (trigger, from, to, extra) => ScrollTrigger.create({
-    trigger, start: 'top bottom', end: 'top top', refreshPriority: -1,
-    onUpdate: (self) => { const p = easeIO(self.progress); can.set(lerpPose(from, to, p)); extra?.(p); },
-    onLeaveBack: () => { if (trigger !== '#flavors') can.set(from); },
-  });
+  const travel = (trigger, from, to, extra) => {
+    let snap = null;
+    return ScrollTrigger.create({
+      trigger, start: 'top bottom', end: 'top top', refreshPriority: -1,
+      onEnter: () => { snap = { ...from, rotY: can.pose.rotY, tiltX: can.pose.tiltX, ny: can.pose.ny }; },
+      onUpdate: (self) => { const p = easeIO(self.progress); can.set(lerpPose(snap || from, to, p)); extra?.(p); },
+      onLeaveBack: () => { if (trigger !== '#flavors') { can.set(snap || from); snap = null; } },
+    });
+  };
   travel('#flavors', POSE.hero, POSE.flavors);
   travel('#inside', POSE.flavors, POSE.inside);
   travel('#story', POSE.inside, POSE.exit);
@@ -257,6 +261,20 @@ if (!isStatic) {
 window.__dbg = () => ({ heroVisible: heroVisible(), timer: !!heroTimer, activeFlavor, flavorsActive });
 
 /* ------------------------------------------------------------------ 03 inside */
+// Turn the can to the part of the label that matches the topic.
+const TOPIC_VIEW = [
+  { rotY: 0, tiltX: 0, dy: 0 },                    // Real Tequila: wordmark + "Sparkling Tequila"
+  { rotY: 0.32, tiltX: -0.26, dy: 0.13 },          // Real Fruit: tip forward onto the fruit engraving
+  { rotY: Math.PI - 0.6, tiltX: -0.1, dy: 0.06 },  // Botanicals: three-quarter turn to the back botanical
+  { rotY: Math.PI, tiltX: 0, dy: 0 },              // Mineral Water: nutrition facts + "Real Tequila · Real Fruit · Mineral Water"
+];
+function applyTopicView(i, instant = false) {
+  if (!can || mobile) return;
+  const v = TOPIC_VIEW[i];
+  const target = { rotY: v.rotY, tiltX: v.tiltX, ny: POSE.inside.ny + v.dy };
+  if (instant) { Object.assign(can.pose, target); return; }
+  can.to(target, { duration: 1.3, ease: 'power3.inOut' });
+}
 const tabs = $$('#inside-tabs [role="tab"]');
 const ingredients = $$('.ingredient');
 let insideActive = 0, insideUser = false;
@@ -267,6 +285,7 @@ function goIngredient(i) {
   const prev = ingredients[insideActive], next = ingredients[i];
   insideActive = i;
   setFlavor(i); // each ingredient step shows a different can
+  applyTopicView(i);
   const fb = $('.inside__fallback'); if (fb) fb.src = `/img/cut-${FLAVORS[i]}-front.png`;
   tabs.forEach((t, k) => { t.setAttribute('aria-selected', String(k === i)); t.tabIndex = k === i ? 0 : -1; });
   const outEls = $$(':scope > *', prev), inEls = $$(':scope > *', next);
@@ -290,7 +309,7 @@ if (!isStatic && !mobile) {
   insideST = ScrollTrigger.create({
     trigger: '#inside-stage', pin: true, start: 'top top', end: '+=220%', anticipatePin: 1,
     onUpdate: (self) => { if (!insideUser) { const i = Math.min(3, Math.floor(self.progress * 4)); if (i !== insideActive) goIngredient(i); } insideSnap(); },
-    onToggle: (self) => { if (self.isActive) setFlavor(insideActive, { spin: insideActive !== activeFlavor }); },
+    onToggle: (self) => { if (self.isActive) { setFlavor(insideActive, { spin: insideActive !== activeFlavor }); applyTopicView(insideActive); } },
     onLeave: () => { insideUser = false; }, onLeaveBack: () => { insideUser = false; },
   });
 }
